@@ -1,4 +1,4 @@
-import mysql, { Connection } from 'mysql2/promise';
+import mysql,  { Connection, RowDataPacket } from 'mysql2/promise';
 
 class BancoMysql {
     // Propriedade
@@ -30,7 +30,7 @@ class BancoMysql {
         const [result, fields] = await conn.query("SELECT * from produtos");
         return result
     }
-    async inserir(produto:{id:string,nome:string,descricao:string,preco:string,imagem:string}){
+    async inserir(produto:{id:number,nome:string,descricao:string,preco:string,imagem:string}){
         const conn = await this.getConnection()
         const sqlQuery = "INSERT INTO produtos (id,nome,descricao,preco,imagem) VALUES (?,?,?,?,?)"
         const parametro = [produto.id,produto.nome,produto.descricao,produto.preco,produto.imagem]
@@ -50,6 +50,14 @@ class BancoMysql {
         const parametro = [produto.nome,produto.descricao,produto.preco,produto.imagem,id]
         const [result, fields] = await conn.query(sqlQuery,parametro);
         return result
+    }
+    async listarPorId(id:string){
+        const conn = await this.getConnection()
+        const sqlQuery = "SELECT * FROM produtos WHERE id = ?"
+        const parametro = [id]
+        const [result, fields] = await conn.query(sqlQuery,parametro) as RowDataPacket[];
+        //Return the first element of the array
+        return result[0]
     }
 }
 

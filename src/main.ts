@@ -19,7 +19,7 @@ import BancoMongo from './db/bancoMongo'
 
 app.get("/produtos",async(req,res)=>{
     try{
-        const banco = new BancoMongo();
+        const banco = new BancoMysql();
         const result = await banco.listar()
         console.log(result)
         await banco.end()
@@ -31,7 +31,7 @@ app.get("/produtos",async(req,res)=>{
 })
 app.get("/produtos/:id",async(req,res)=>{
     try{
-        const banco = new BancoMongo();
+        const banco = new BancoMysql();
         const result = await banco.listarPorId(req.params.id)
         console.log(result)
         await banco.end()
@@ -46,7 +46,7 @@ app.post("/produtos",async(req,res)=>{
     try{
         const {id,nome,descricao,preco,imagem} = req.body
         console.log(id,nome,descricao,preco,imagem)
-        const banco = new BancoMongo();
+        const banco = new BancoMysql();
 
         const produto = {id:parseInt(id),nome,descricao,preco,imagem}
 
@@ -68,7 +68,7 @@ app.delete("/produtos/:id",async (req,res)=>{
         const sqlQuery = "DELETE FROM produtos WHERE id = ?"
         const parametro = [req.params.id]
 
-        const banco = new BancoMongo();
+        const banco = new BancoMysql();
 
         const result = await banco.excluir(req.params.id)
 
@@ -85,7 +85,7 @@ app.put("/produtos/:id",async (req,res)=>{
         //const sqlQuery = "UPDATE produtos SET nome=?,descricao=?,preco=?,imagem=? WHERE id = ?"
         const produto = {nome,descricao,preco,imagem}
 
-        const banco = new BancoMongo();
+        const banco = new BancoMysql();
 
         const result = await banco.alterar(req.params.id,produto)
 
